@@ -1,7 +1,8 @@
 import os
 import datetime
 import jwt
-from flask import request
+from flask import request, render_template
+from constants.python.page_urls import PAGE_URLS
 
 SECRET_KEY = os.environ.get("SECRET_KEY")
 
@@ -45,3 +46,20 @@ def get_token_from_header():
         token = auth_header.split(" ")[1]
         return token
     return None
+
+
+def render_template_after_authorized(targetHtml):
+    token = get_token_from_header()
+
+    # TODO: 예쁜 모달로 블락
+    if not token:
+        return """
+            <script>
+                alert("로그인이 필요합니다");
+                location.href = "{0}";
+            </script>
+        """.format(
+            PAGE_URLS["SIGN_IN"]
+        )
+
+    render_template(targetHtml)

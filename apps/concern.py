@@ -5,6 +5,7 @@ from bson import ObjectId
 from pymongo import MongoClient
 from datetime import datetime
 from constants.python.page_urls import PAGE_URLS
+from apps.auth import render_template_after_authorized
 
 load_dotenv()
 MONGO_DB_URI = os.environ.get("MONGO_DB_URI")
@@ -36,7 +37,9 @@ def getConcernList():
     for i in concernList:
         i["_id"] = str(i["_id"])
 
-    return render_template("concernList.html", topList=topList, concernList=concernList)
+    return render_template_after_authorized(
+        "concernList.html", topList=topList, concernList=concernList
+    )
     ## 무한 스크롤(페이징) 고민
 
 
@@ -69,7 +72,7 @@ def getConcernListTest():
 @concern_bp.route(PAGE_URLS["CONCERN_ADD"], methods=["GET"])
 def addConcernForm():
 
-    return render_template("addConcern.html")
+    return render_template_after_authorized("addConcern.html")
 
 
 ## addConcern에서 고민 추가
@@ -108,7 +111,9 @@ def getConcernDetail():
     )  # ObjectId는 Json 안에 담을 수 없다. String으로 바꿔줄 것
     solutions = list(db.concerns.find({"concern_id": concernId}))
 
-    return render_template("concernDetail.html", concern=concern, solutions=solutions)
+    return render_template_after_authorized(
+        "concernDetail.html", concern=concern, solutions=solutions
+    )
 
     # return jsonify({'result':'success', 'concern':concern, 'solutions':solutions, 'msg':'getConcernDetail 성공!'})
 
