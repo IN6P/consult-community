@@ -48,7 +48,8 @@ def get_token_from_header():
     return None
 
 
-def render_template_after_authorized(targetHtml):
+def render_template_after_authorized(template_name, **kwargs):
+
     token = get_token_from_header()
 
     # TODO: 예쁜 모달로 블락
@@ -62,4 +63,4 @@ def render_template_after_authorized(targetHtml):
             PAGE_URLS["SIGN_IN"]
         )
 
-    render_template(targetHtml)
+    render_template(template_name, **kwargs)
